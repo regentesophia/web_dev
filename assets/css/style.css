@@ -1,0 +1,256 @@
+/* Retro desktop theme for web_dev landing page.
+   Loaded after Bootstrap, so these rules override its defaults. */
+
+:root {
+  --desktop: #3e8b95;
+  --desktop-dot: #3a8089;
+  --ink: #2b2350;
+  --cream: #fde7e4;
+  --paper: #fff6f4;
+  --pink: #f6a9dc;
+  --lavender: #b7a4ec;
+  --mint: #9fe0c0;
+  --lilac: #ece6fb;
+  --shadow: #1f4f57;
+}
+
+body {
+  font-family: "Pixelify Sans", "Courier New", monospace;
+  color: var(--ink);
+  background-color: var(--desktop);
+  background-image: radial-gradient(var(--desktop-dot) 1px, transparent 1px);
+  background-size: 4px 4px;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Window */
+.retro-window {
+  width: min(1000px, 100%);
+  background: var(--cream);
+  border: 3px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--shadow);
+}
+
+.retro-titlebar {
+  background: var(--lavender);
+  border-bottom: 3px solid var(--ink);
+  padding: 4px 6px;
+}
+.retro-titlebar .name { font-weight: 600; font-size: 18px; }
+
+.retro-winbtn {
+  width: 22px;
+  height: 22px;
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  box-shadow: inset -2px -2px 0 var(--pink);
+  font-size: 14px;
+  line-height: 1;
+}
+
+.retro-menubar {
+  background: var(--pink);
+  border-bottom: 3px solid var(--ink);
+  padding: 3px 12px;
+  font-size: 16px;
+}
+
+.retro-toolbar {
+  border-bottom: 3px solid var(--ink);
+  padding: 6px 10px;
+  font-size: 16px;
+}
+.retro-path {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  padding: 2px 8px;
+}
+
+/* Retro button (Bootstrap .btn base, restyled) */
+.btn-retro {
+  --bs-btn-color: var(--ink);
+  --bs-btn-bg: var(--cream);
+  --bs-btn-border-color: var(--ink);
+  --bs-btn-hover-color: var(--ink);
+  --bs-btn-hover-bg: var(--lavender);
+  --bs-btn-hover-border-color: var(--ink);
+  --bs-btn-active-color: var(--ink);
+  --bs-btn-active-bg: var(--lavender);
+  --bs-btn-active-border-color: var(--ink);
+  --bs-btn-focus-shadow-rgb: 43, 35, 80;
+  --bs-btn-border-width: 2px;
+  --bs-btn-border-radius: 0;
+  --bs-btn-padding-y: 1px;
+  --bs-btn-padding-x: 10px;
+  --bs-btn-font-size: 16px;
+  font-family: inherit;
+  box-shadow: inset -2px -2px 0 var(--pink);
+  white-space: nowrap;
+}
+.btn-retro:active { box-shadow: inset 2px 2px 0 var(--pink); }
+
+.retro-body { margin: 10px; }
+
+.retro-content {
+  min-height: 420px;
+  padding: 18px;
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  box-shadow: inset 3px 3px 0 var(--pink);
+}
+
+.retro-statusbar {
+  padding: 4px 12px 8px;
+  font-size: 15px;
+}
+
+/* File icon */
+.file {
+  width: 100%;
+  padding: 8px 4px;
+  color: var(--ink);
+  text-decoration: none;
+  text-align: center;
+  border: 2px solid transparent;
+  cursor: pointer;
+  outline: none;
+}
+.file:hover { color: var(--ink); }
+.file img,
+.file .fallback {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+  object-fit: contain;
+}
+.file .label {
+  font-size: 16px;
+  line-height: 1.15;
+  padding: 1px 4px;
+  word-break: break-word;
+}
+.file.selected,
+.file:focus-visible { border: 2px dotted var(--ink); }
+.file.selected .label,
+.file:focus-visible .label {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+/* Details pane */
+.retro-details {
+  padding: 14px;
+  background: var(--lilac);
+  border: 3px solid var(--ink);
+  box-shadow: inset 3px 3px 0 var(--lavender);
+}
+.details-title {
+  margin: 0 0 8px;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.15;
+  word-break: break-word;
+}
+.details-text {
+  margin: 0 0 12px;
+  font-size: 15px;
+  line-height: 1.3;
+}
+.details-icon { margin-bottom: 10px; }
+.details-icon img,
+.details-icon .fallback {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+  object-fit: contain;
+}
+.details-meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 10px;
+  margin: 0 0 12px;
+  padding: 8px 0;
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  font-size: 15px;
+}
+.details-meta dt { font-weight: 600; }
+.details-meta dd { margin: 0; }
+
+/* Desktop shortcuts (sit on the teal desktop, outside the window) */
+.desktop-icons { flex: 0 0 auto; }
+@media (min-width: 768px) {
+  .desktop-icons { width: 128px; }
+}
+.desktop-area { min-width: 0; }
+
+.shortcut {
+  width: 96px;
+  padding: 6px 4px;
+  background: none;
+  border: 2px solid transparent;
+  color: var(--cream);
+  font: inherit;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+}
+.shortcut:hover { color: var(--cream); }
+.shortcut img,
+.shortcut .fallback {
+  width: 56px;
+  height: 56px;
+  image-rendering: pixelated;
+  object-fit: contain;
+  filter: drop-shadow(2px 2px 0 var(--shadow));
+}
+.shortcut .label {
+  font-size: 16px;
+  line-height: 1.15;
+  padding: 1px 4px;
+  text-shadow: 1px 1px 0 var(--shadow);
+  word-break: break-word;
+}
+.shortcut.selected,
+.shortcut:focus-visible { border: 2px dotted var(--cream); }
+.shortcut.selected .label,
+.shortcut:focus-visible .label {
+  background: var(--ink);
+  color: var(--cream);
+  text-shadow: none;
+}
+
+/* Message dialog */
+.retro-dialog {
+  width: min(320px, 90vw);
+  padding: 0;
+  color: var(--ink);
+  font-family: inherit;
+  background: var(--cream);
+  border: 3px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--shadow);
+}
+.retro-dialog::backdrop { background: rgba(31, 79, 87, 0.55); }
+.retro-dialog .retro-titlebar .name { font-weight: 600; font-size: 18px; }
+
+/* Taskbar */
+.retro-taskbar {
+  background: var(--pink);
+  border-top: 3px solid var(--ink);
+  padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
+  font-size: 17px;
+}
+.retro-taskbar .start,
+.retro-taskbar .task,
+.retro-taskbar .clock {
+  border: 2px solid var(--ink);
+  background: var(--cream);
+  padding: 2px 12px;
+}
+.retro-taskbar .start { font-weight: 600; box-shadow: inset -2px -2px 0 var(--lavender); }
+.retro-taskbar .task { flex: 1; max-width: 220px; background: var(--lavender); }
+
+@media (max-width: 480px) {
+  .retro-content { min-height: 240px; }
+}

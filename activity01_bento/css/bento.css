@@ -1,0 +1,136 @@
+/* Bento tiles for activity01_bento.
+   Loaded after Bootstrap and ../assets/css/style.css, so these rules win. */
+
+.retro-window { width: min(1100px, 100%); }
+
+/* The grid sits in the same inset panel as the landing page's file area */
+.bento-wrap {
+  min-height: 0;
+  padding: 10px;
+}
+
+/* Bootstrap .card, restyled to match the retro windows */
+.card {
+  --bs-card-border-width: 3px;
+  --bs-card-border-color: var(--ink);
+  --bs-card-border-radius: 0;
+  min-height: 120px;
+  box-shadow: inset 3px 3px 0 rgba(255, 255, 255, 0.55), 3px 3px 0 var(--shadow);
+}
+
+.tile-tall { min-height: 256px; }
+
+/* Palette from the landing page */
+.card.tile-pink     { background-color: var(--pink); }
+.card.tile-lavender { background-color: var(--lavender); }
+.card.tile-mint     { background-color: var(--mint); }
+.card.tile-lilac    { background-color: var(--lilac); }
+
+/* ---------- To-do board widgets ---------- */
+.card-body { color: var(--ink); }
+
+.tile-title {
+  margin: 0 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid var(--ink);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+.stat-num { font-size: 40px; font-weight: 600; line-height: 1; }
+.stat-text { font-size: 22px; font-weight: 600; line-height: 1.1; }
+
+/* Text boxes */
+.retro-input {
+  min-width: 0;
+  padding: 2px 8px;
+  color: var(--ink);
+  font: inherit;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 0;
+}
+.retro-input:focus-visible { outline: 2px dotted var(--ink); outline-offset: 2px; }
+.retro-note { min-height: 140px; resize: none; }
+
+/* Pixel checkbox */
+.retro-check {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 auto;
+  display: grid;
+  place-content: center;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+}
+.retro-check::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background: var(--ink);
+  transform: scale(0);
+}
+.retro-check:checked::after { transform: scale(1); }
+.retro-check:focus-visible { outline: 2px dotted var(--ink); outline-offset: 2px; }
+
+/* Lists */
+.todo-list { max-height: 360px; overflow-y: auto; }
+.todo-item { padding: 4px 0; border-bottom: 2px dotted var(--ink); }
+.todo-item:last-child { border-bottom: 0; }
+.todo-item label { cursor: pointer; }
+.todo-item.is-done span { text-decoration: line-through; opacity: 0.6; }
+.todo-item.is-overdue small { font-weight: 600; }
+
+.retro-x {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  color: var(--ink);
+  font: inherit;
+  line-height: 1;
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+}
+.retro-x:hover { background: var(--pink); }
+
+/* Progress bar */
+.retro-progress {
+  height: 22px;
+  padding: 2px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+}
+.retro-progress .fill {
+  width: 0;
+  height: 100%;
+  background: repeating-linear-gradient(90deg, var(--ink) 0 8px, transparent 8px 10px);
+  transition: width 0.3s steps(8);
+}
+
+/* Mood buttons */
+.mood-btn.active { background: var(--ink); color: var(--cream); }
+.btn-retro:disabled { opacity: 0.5; }
+
+/* ---------- Window pop-up animation ---------- */
+/* Stepped keyframes give a chunky, low-frame-rate "window opening" feel */
+@keyframes window-pop {
+  0%   { transform: scale(0.2); opacity: 0; }
+  60%  { transform: scale(1.04); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.retro-window {
+  transform-origin: center;
+  animation: window-pop 0.4s steps(6, end) both;
+}
+
+/* Skip the animation for people who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .retro-window { animation: none; }
+}

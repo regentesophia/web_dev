@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bento</title>
+
+  <link rel="icon" type="image/png" href="../assets/page_icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link href="../assets/css/style.css" rel="stylesheet">
+  <link href="css/bento.css" rel="stylesheet">
+  <link href="../assets/css/desktop.css" rel="stylesheet">
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+  <main class="flex-grow-1 d-flex align-items-center justify-content-center px-3 py-4">
+    <section class="retro-window" aria-label="activity01_bento" data-icon="bento_icon.png">
+
+      <div class="retro-titlebar d-flex align-items-center gap-2">
+        <span class="name flex-grow-1">activity01_bento</span>
+        <button type="button" class="retro-winbtn d-flex align-items-center justify-content-center" data-win="min" aria-label="Minimize">_</button>
+        <button type="button" class="retro-winbtn d-flex align-items-center justify-content-center" data-win="max" aria-label="Maximize">&#9633;</button>
+        <button type="button" class="retro-winbtn d-flex align-items-center justify-content-center" data-win="close" aria-label="Close">x</button>
+      </div>
+
+      <div class="retro-menubar d-flex gap-3" aria-hidden="true">
+        <span>File</span><span>Edit</span><span>View</span><span>Help</span>
+      </div>
+
+      <div class="retro-toolbar d-flex align-items-center gap-2">
+        <a class="btn btn-retro btn-sm" href="../index.html">&lt; Back</a>
+        <span>Address</span>
+        <span class="retro-path flex-grow-1 text-truncate">C:\portfolio\web_dev\activity01_bento</span>
+      </div>
+
+      <div class="retro-body">
+        <div class="retro-content bento-wrap">
+          <div class="container-fluid px-1">
+
+            <div class="row">
+              <div class="col-6 col-md-2 p-1">
+                <div class="card p-1 h-100 tile-pink">
+                  <div class="card-body p-1">
+                    <h2 class="tile-title">Today</h2>
+                    <div class="stat-text" id="today-weekday">--</div>
+                    <div id="today-date">--</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6 col-md-2 p-1">
+                <div class="card p-1 h-100 tile-lavender">
+                  <div class="card-body p-1">
+                    <h2 class="tile-title">To do</h2>
+                    <div class="stat-num" id="count-todo">0</div>
+                    <div>task(s) left</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6 col-md-2 p-1">
+                <div class="card p-1 h-100 tile-mint">
+                  <div class="card-body p-1">
+                    <h2 class="tile-title">Done</h2>
+                    <div class="stat-num" id="count-done">0</div>
+                    <div>task(s) done</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6 col-md-2 p-1">
+                <div class="card p-1 h-100 tile-lilac">
+                  <div class="card-body p-1">
+                    <h2 class="tile-title">Progress</h2>
+                    <div class="retro-progress" role="progressbar" aria-label="Tasks completed" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress">
+                      <div class="fill" id="progress-fill"></div>
+                    </div>
+                    <div class="mt-2" id="progress-label">No tasks yet</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-4 p-1">
+                <div class="card p-1 h-100 tile-pink">
+                  <div class="card-body p-1">
+                    <h2 class="tile-title">Next due</h2>
+                    <div class="fw-semibold text-break" id="next-title">None</div>
+                    <div id="next-when">No upcoming deadlines</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-md-4 d-flex flex-column">
+                <div class="row">
+                  <div class="col-12 p-1">
+                    <div class="card p-1 h-100 tile-lavender">
+                      <div class="card-body p-1">
+                        <h2 class="tile-title">Add a task</h2>
+                        <form class="d-flex gap-2" id="task-form">
+                          <input class="retro-input flex-grow-1" id="task-input" type="text" maxlength="80"
+                            placeholder="What needs doing?" aria-label="New task" required>
+                          <button class="btn btn-retro btn-sm" type="submit">Add</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row flex-grow-1">
+                  <div class="col-6 p-1">
+                    <div class="card p-1 h-100 tile-mint">
+                      <div class="card-body p-1">
+                        <h2 class="tile-title">Mood</h2>
+                        <div class="d-flex flex-wrap gap-1" id="mood-group">
+                          <button class="btn btn-retro btn-sm mood-btn" type="button" data-mood=":)" aria-pressed="false">:)</button>
+                          <button class="btn btn-retro btn-sm mood-btn" type="button" data-mood=":|" aria-pressed="false">:|</button>
+                          <button class="btn btn-retro btn-sm mood-btn" type="button" data-mood=":(" aria-pressed="false">:(</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6 p-1">
+                    <div class="card p-1 h-100 tile-pink">
+                      <div class="card-body p-1">
+                        <h2 class="tile-title">Quote</h2>
+                        <p class="mb-0" id="quote"></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-4 p-1">
+                <div class="card p-1 h-100 tile-lilac tile-tall">
+                  <div class="card-body p-1">
+                    <h2 class="tile-title">My tasks</h2>
+                    <ul class="list-unstyled todo-list mb-0" id="task-list"></ul>
+                    <p class="mb-0" id="task-empty" hidden>Nothing here yet. Add a task!</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-4">
+                <div class="row h-100">
+                  <div class="col-6 p-1">
+                    <div class="card p-1 h-100 tile-pink tile-tall">
+                      <div class="card-body p-1">
+                        <h2 class="tile-title">Deadlines</h2>
+                        <ul class="list-unstyled todo-list mb-0" id="deadline-list"></ul>
+                        <p class="mb-0" id="deadline-empty" hidden>No deadlines.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6 p-1">
+                    <div class="card p-1 h-100 tile-lavender tile-tall">
+                      <div class="card-body p-1 d-flex flex-column">
+                        <h2 class="tile-title">Sticky note</h2>
+                        <textarea class="retro-input flex-grow-1 retro-note" id="note" maxlength="500"
+                          placeholder="Quick reminders..." aria-label="Sticky note"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-md-4 p-1">
+                <div class="card p-1 h-100 tile-mint">
+                  <div class="card-body p-1">
+                    <h2 class="tile-title">Recycle Bin</h2>
+                    <div class="d-flex align-items-center justify-content-between gap-2">
+                      <span id="bin-count">0 finished task(s)</span>
+                      <button class="btn btn-retro btn-sm" type="button" id="bin-empty">Empty</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-4 p-1">
+                <div class="card p-1 h-100 tile-pink">
+                  <div class="card-body p-1">
+                    <h2 class="tile-title">Add a deadline</h2>
+                    <form class="d-flex flex-wrap gap-2" id="deadline-form">
+                      <input class="retro-input flex-grow-1" id="dl-text" type="text" maxlength="60"
+                        placeholder="What is due?" aria-label="Deadline title" required>
+                      <input class="retro-input" id="dl-date" type="date" aria-label="Due date" required>
+                      <button class="btn btn-retro btn-sm" type="submit">Add</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-4 p-1">
+                <div class="card p-1 h-100 tile-lilac">
+                  <div class="card-body p-1">
+                    <h2 class="tile-title">Focus timer</h2>
+                    <div class="d-flex align-items-center justify-content-between gap-2">
+                      <span class="stat-text" id="timer-display">25:00</span>
+                      <span class="d-flex gap-1">
+                        <button class="btn btn-retro btn-sm" type="button" id="timer-toggle">Start</button>
+                        <button class="btn btn-retro btn-sm" type="button" id="timer-reset">Reset</button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="retro-statusbar d-flex justify-content-between">
+        <span>14 object(s)</span>
+        <span>Student to-do board</span>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="retro-taskbar d-flex align-items-center gap-2">
+    <button type="button" class="start" id="start-button" aria-haspopup="menu" aria-expanded="false">Start</button>
+    <button type="button" class="task" aria-pressed="true">activity01_bento</button>
+    <span class="clock ms-auto" id="clock">--:--</span>
+  </footer>
+
+  <script src="js/bento.js"></script>
+  <script src="../assets/js/desktop.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,171 @@
+/* Shared desktop behavior styles: window buttons, Start menu, boot screen,
+   pop-in animation and pixel cursors. Load this AFTER style.css (and bento.css). */
+
+/* ---------- Window buttons and title bar ---------- */
+.retro-titlebar { user-select: none; touch-action: none; }
+.retro-winbtn {
+  padding: 0;
+  color: var(--ink);
+  font-family: inherit;
+}
+.retro-winbtn:hover { background: var(--pink); }
+.retro-winbtn:active { box-shadow: inset 2px 2px 0 var(--pink); }
+.retro-winbtn:focus-visible { outline: 2px dotted var(--ink); outline-offset: 1px; }
+
+/* Pop-in animation (used when a window is reopened or restored) */
+@keyframes win-pop {
+  0%   { transform: scale(0.2); opacity: 0; }
+  60%  { transform: scale(1.04); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.retro-window.pop-in {
+  transform-origin: center;
+  animation: win-pop 0.4s steps(6, end) both;
+}
+
+/* Maximized window */
+.retro-window.is-maximized {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  width: 100%;
+  max-width: none;
+}
+.retro-window.is-maximized .retro-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+.retro-window.is-maximized .retro-body > * { flex: 1 1 auto; }
+
+/* ---------- Taskbar buttons ---------- */
+.retro-taskbar { position: relative; }
+.retro-taskbar .start,
+.retro-taskbar .task {
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+}
+.retro-taskbar .start { font-weight: 600; }
+.retro-taskbar .start[aria-expanded="true"] {
+  background: var(--lavender);
+  box-shadow: inset 2px 2px 0 var(--pink);
+}
+.retro-taskbar .task[aria-pressed="false"] { background: var(--cream); }
+
+/* ---------- Start menu ---------- */
+.start-menu {
+  position: absolute;
+  left: 8px;
+  bottom: 100%;
+  z-index: 50;
+  min-width: 230px;
+  padding: 4px;
+  background: var(--cream);
+  border: 3px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--shadow);
+}
+.start-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 6px 10px;
+  color: var(--ink);
+  font: inherit;
+  font-size: 17px;
+  text-align: left;
+  text-decoration: none;
+  background: none;
+  border: 0;
+  outline: none;
+}
+.start-item:hover,
+.start-item:focus-visible { color: var(--cream); background: var(--ink); }
+.start-sep { margin: 4px 2px; border-top: 2px solid var(--ink); }
+.start-dot { flex: 0 0 auto; width: 14px; height: 14px; border: 2px solid currentColor; }
+.dot-pink { background: var(--pink); }
+.dot-lavender { background: var(--lavender); }
+.dot-mint { background: var(--mint); }
+.dot-lilac { background: var(--lilac); }
+.dot-ink { background: var(--ink); }
+
+/* ---------- Reopen icon (shown while the window is closed) ---------- */
+.reopen-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.reopen-icon[hidden] { display: none; }
+.desktop-icons.desktop-icons-float {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 5;
+  width: auto;
+  padding: 0;
+}
+
+/* ---------- Boot screen (landing page) ---------- */
+html.booted .boot-screen { display: none; }
+.boot-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  color: var(--cream);
+  font-family: "Pixelify Sans", "Courier New", monospace;
+  background: var(--ink);
+}
+.boot-box { width: min(420px, 100%); text-align: center; }
+.boot-title { margin: 0 0 20px; color: var(--pink); font-size: 34px; font-weight: 600; }
+.boot-bar { height: 26px; padding: 3px; border: 3px solid var(--cream); }
+.boot-bar .fill {
+  width: 0;
+  height: 100%;
+  background: repeating-linear-gradient(90deg, var(--mint) 0 10px, transparent 10px 13px);
+  transition: width 0.18s steps(2);
+}
+.boot-text { margin: 14px 0 4px; font-size: 18px; }
+.boot-skip { margin: 0; font-size: 14px; opacity: 0.7; }
+
+/* ---------- Shut Down screen (joke) ---------- */
+.shutdown {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: grid;
+  place-content: center;
+  gap: 10px;
+  padding: 24px;
+  color: var(--pink);
+  font-family: "Pixelify Sans", "Courier New", monospace;
+  text-align: center;
+  background: #000;
+  outline: none;
+}
+.shutdown[hidden] { display: none; }
+.shutdown p { margin: 0; font-size: 22px; }
+.shutdown .small { color: var(--cream); font-size: 14px; opacity: 0.7; }
+
+/* ---------- Pixel cursors ---------- */
+html { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='36' viewBox='0 0 12 18' shape-rendering='crispEdges'%3E%3Crect x='0' y='0' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='1' width='2' height='1' fill='%232b2350'/%3E%3Crect x='0' y='2' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='2' width='1' height='1' fill='%23fde7e4'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='3' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='3' width='2' height='1' fill='%23fde7e4'/%3E%3Crect x='3' y='3' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='4' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='4' width='3' height='1' fill='%23fde7e4'/%3E%3Crect x='4' y='4' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='5' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='5' width='4' height='1' fill='%23fde7e4'/%3E%3Crect x='5' y='5' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='6' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='6' width='5' height='1' fill='%23fde7e4'/%3E%3Crect x='6' y='6' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='7' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='7' width='6' height='1' fill='%23fde7e4'/%3E%3Crect x='7' y='7' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='8' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='8' width='7' height='1' fill='%23fde7e4'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='9' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='9' width='8' height='1' fill='%23fde7e4'/%3E%3Crect x='9' y='9' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='10' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='10' width='9' height='1' fill='%23fde7e4'/%3E%3Crect x='10' y='10' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='11' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='11' width='6' height='1' fill='%23fde7e4'/%3E%3Crect x='7' y='11' width='5' height='1' fill='%232b2350'/%3E%3Crect x='0' y='12' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='12' width='2' height='1' fill='%23fde7e4'/%3E%3Crect x='3' y='12' width='1' height='1' fill='%232b2350'/%3E%3Crect x='4' y='12' width='2' height='1' fill='%23fde7e4'/%3E%3Crect x='6' y='12' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='13' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='13' width='1' height='1' fill='%23fde7e4'/%3E%3Crect x='2' y='13' width='1' height='1' fill='%232b2350'/%3E%3Crect x='4' y='13' width='1' height='1' fill='%232b2350'/%3E%3Crect x='5' y='13' width='2' height='1' fill='%23fde7e4'/%3E%3Crect x='7' y='13' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='14' width='2' height='1' fill='%232b2350'/%3E%3Crect x='4' y='14' width='1' height='1' fill='%232b2350'/%3E%3Crect x='5' y='14' width='2' height='1' fill='%23fde7e4'/%3E%3Crect x='7' y='14' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='15' width='1' height='1' fill='%232b2350'/%3E%3Crect x='5' y='15' width='1' height='1' fill='%232b2350'/%3E%3Crect x='6' y='15' width='2' height='1' fill='%23fde7e4'/%3E%3Crect x='8' y='15' width='1' height='1' fill='%232b2350'/%3E%3Crect x='5' y='16' width='1' height='1' fill='%232b2350'/%3E%3Crect x='6' y='16' width='2' height='1' fill='%23fde7e4'/%3E%3Crect x='8' y='16' width='1' height='1' fill='%232b2350'/%3E%3Crect x='6' y='17' width='2' height='1' fill='%232b2350'/%3E%3C/svg%3E") 0 0, default; }
+
+a[href], button:not(:disabled), .btn, summary, select, label,
+input[type="checkbox"], [role="menuitem"],
+.file, .shortcut, .retro-winbtn, .retro-x, .retro-check {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='36' viewBox='0 0 12 18' shape-rendering='crispEdges'%3E%3Crect x='0' y='0' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='1' width='2' height='1' fill='%232b2350'/%3E%3Crect x='0' y='2' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='2' width='1' height='1' fill='%23f6a9dc'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='3' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='3' width='2' height='1' fill='%23f6a9dc'/%3E%3Crect x='3' y='3' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='4' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='4' width='3' height='1' fill='%23f6a9dc'/%3E%3Crect x='4' y='4' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='5' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='5' width='4' height='1' fill='%23f6a9dc'/%3E%3Crect x='5' y='5' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='6' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='6' width='5' height='1' fill='%23f6a9dc'/%3E%3Crect x='6' y='6' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='7' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='7' width='6' height='1' fill='%23f6a9dc'/%3E%3Crect x='7' y='7' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='8' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='8' width='7' height='1' fill='%23f6a9dc'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='9' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='9' width='8' height='1' fill='%23f6a9dc'/%3E%3Crect x='9' y='9' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='10' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='10' width='9' height='1' fill='%23f6a9dc'/%3E%3Crect x='10' y='10' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='11' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='11' width='6' height='1' fill='%23f6a9dc'/%3E%3Crect x='7' y='11' width='5' height='1' fill='%232b2350'/%3E%3Crect x='0' y='12' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='12' width='2' height='1' fill='%23f6a9dc'/%3E%3Crect x='3' y='12' width='1' height='1' fill='%232b2350'/%3E%3Crect x='4' y='12' width='2' height='1' fill='%23f6a9dc'/%3E%3Crect x='6' y='12' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='13' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='13' width='1' height='1' fill='%23f6a9dc'/%3E%3Crect x='2' y='13' width='1' height='1' fill='%232b2350'/%3E%3Crect x='4' y='13' width='1' height='1' fill='%232b2350'/%3E%3Crect x='5' y='13' width='2' height='1' fill='%23f6a9dc'/%3E%3Crect x='7' y='13' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='14' width='2' height='1' fill='%232b2350'/%3E%3Crect x='4' y='14' width='1' height='1' fill='%232b2350'/%3E%3Crect x='5' y='14' width='2' height='1' fill='%23f6a9dc'/%3E%3Crect x='7' y='14' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='15' width='1' height='1' fill='%232b2350'/%3E%3Crect x='5' y='15' width='1' height='1' fill='%232b2350'/%3E%3Crect x='6' y='15' width='2' height='1' fill='%23f6a9dc'/%3E%3Crect x='8' y='15' width='1' height='1' fill='%232b2350'/%3E%3Crect x='5' y='16' width='1' height='1' fill='%232b2350'/%3E%3Crect x='6' y='16' width='2' height='1' fill='%23f6a9dc'/%3E%3Crect x='8' y='16' width='1' height='1' fill='%232b2350'/%3E%3Crect x='6' y='17' width='2' height='1' fill='%232b2350'/%3E%3C/svg%3E") 0 0, pointer;
+}
+input[type="text"], input[type="date"], textarea { cursor: text; }
+
+.boot-screen, .boot-screen *, .shutdown {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 11 11' shape-rendering='crispEdges'%3E%3Crect x='0' y='0' width='11' height='1' fill='%232b2350'/%3E%3Crect x='0' y='1' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='1' width='9' height='1' fill='%23fde7e4'/%3E%3Crect x='10' y='1' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='2' width='1' height='1' fill='%232b2350'/%3E%3Crect x='2' y='2' width='7' height='1' fill='%23fde7e4'/%3E%3Crect x='9' y='2' width='1' height='1' fill='%232b2350'/%3E%3Crect x='2' y='3' width='1' height='1' fill='%232b2350'/%3E%3Crect x='3' y='3' width='5' height='1' fill='%23fde7e4'/%3E%3Crect x='8' y='3' width='1' height='1' fill='%232b2350'/%3E%3Crect x='3' y='4' width='1' height='1' fill='%232b2350'/%3E%3Crect x='4' y='4' width='3' height='1' fill='%23fde7e4'/%3E%3Crect x='7' y='4' width='1' height='1' fill='%232b2350'/%3E%3Crect x='4' y='5' width='1' height='1' fill='%232b2350'/%3E%3Crect x='5' y='5' width='1' height='1' fill='%23fde7e4'/%3E%3Crect x='6' y='5' width='1' height='1' fill='%232b2350'/%3E%3Crect x='3' y='6' width='1' height='1' fill='%232b2350'/%3E%3Crect x='4' y='6' width='3' height='1' fill='%23f6a9dc'/%3E%3Crect x='7' y='6' width='1' height='1' fill='%232b2350'/%3E%3Crect x='2' y='7' width='1' height='1' fill='%232b2350'/%3E%3Crect x='3' y='7' width='5' height='1' fill='%23f6a9dc'/%3E%3Crect x='8' y='7' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='8' width='1' height='1' fill='%232b2350'/%3E%3Crect x='2' y='8' width='7' height='1' fill='%23f6a9dc'/%3E%3Crect x='9' y='8' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='9' width='1' height='1' fill='%232b2350'/%3E%3Crect x='1' y='9' width='9' height='1' fill='%23f6a9dc'/%3E%3Crect x='10' y='9' width='1' height='1' fill='%232b2350'/%3E%3Crect x='0' y='10' width='11' height='1' fill='%232b2350'/%3E%3C/svg%3E") 11 11, wait;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .retro-window.pop-in { animation: none; }
+  .boot-screen { display: none; }
+}
