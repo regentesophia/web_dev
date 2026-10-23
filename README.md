@@ -19,9 +19,7 @@ The pixel-art icons on this site are from the Windows 95 icon packs by **aconfus
 
 | Pack | Link |
 | --- | --- |
-| Windows 95 +PLUS+ Icon Pack #1 | <https://aconfuseddragon.itch.io/windows-95-plus-1> |
-| Windows 95 +PLUS+ Icon Pack #2 | <https://aconfuseddragon.itch.io/windows-95-plus-2> |
-| Windows 95 ~Calming~ Icon Pack | <https://aconfuseddragon.itch.io/windows-95-calming> |
+| Windows 95 Calming Icon Pack | <https://aconfuseddragon.itch.io/windows-95-calming> |
 
 More from the artist: <https://aconfuseddragon.itch.io>
 
