@@ -157,6 +157,7 @@
       { label: 'Portfolio', href: 'https://regentesophia.github.io', dot: 'pink' },
       { label: 'Web Dev Projects', href: siteUrl('../../index.html'), dot: 'lavender' },
       { label: 'activity01_bento', href: siteUrl('../../activity01_bento/index.html'), dot: 'mint' },
+      { label: 'activity02_json', href: siteUrl('../../activity02_json/index.html'), dot: 'lavender' },
       'sep',
       { label: 'GitHub', href: 'https://github.com/regentesophia', dot: 'lilac', newTab: true },
       { label: 'Mail', href: 'mailto:regentesophia@gmail.com', dot: 'pink' },

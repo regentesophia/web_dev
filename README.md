@@ -9,6 +9,7 @@ A retro-computer-themed landing page for my web development projects, built with
 | Folder | Description |
 | --- | --- |
 | [`activity01_bento`](activity01_bento/) | A retro-themed to-do board with tasks, deadlines, a sticky note and a focus timer. Saves in your browser. |
+| [`activity02_json`](activity02_json/) | A JSON-powered gallery of Genshin Impact characters, shown as cards with portrait, element, weapon and intro. |
 
 ## Credits
 
@@ -27,6 +28,10 @@ More from the artist: <https://aconfuseddragon.itch.io>
 - **Author:** aconfuseddragon (itch.io)
 - **License:** [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
 - **Changes:** icons are displayed at small sizes (56 to 64 px) with nearest-neighbor ("pixelated") scaling. No other changes were made.
+
+### Game content
+
+Character names, portraits, intro lines and voice lines in `activity02_json` are from *Genshin Impact* and are © HoYoverse. They are used here for a class activity. This project is not affiliated with or endorsed by HoYoverse.
 
 ### Built with
 

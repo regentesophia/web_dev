@@ -1,0 +1,183 @@
+.retro-window { width: min(1100px, 100%); }
+
+.json-wrap {
+  min-height: 0;
+  max-height: 65vh;
+  padding: 10px;
+  overflow-y: auto;
+  scrollbar-color: var(--ink) var(--lilac);
+}
+
+.card {
+  --bs-card-border-width: 3px;
+  --bs-card-border-color: var(--ink);
+  --bs-card-border-radius: 0;
+  --bs-card-color: var(--ink);
+  box-shadow: 3px 3px 0 var(--shadow);
+}
+.card-body { color: var(--ink); }
+
+.card.tile-pink     { --tile: var(--pink);     background-color: var(--pink); }
+.card.tile-lavender { --tile: var(--lavender); background-color: var(--lavender); }
+.card.tile-mint     { --tile: var(--mint);     background-color: var(--mint); }
+.card.tile-lilac    { --tile: var(--lilac);    background-color: var(--lilac); }
+.card.tile-cream    { --tile: var(--cream);    background-color: var(--cream); }
+
+/* ---------- Version logo ---------- */
+.version-banner {
+  margin: 4px 4px 12px;
+  text-align: center;
+}
+.version-logo {
+  display: inline-block;
+  max-width: min(100%, 520px);
+  max-height: 160px;
+  height: auto;
+  mix-blend-mode: multiply;
+}
+.version-fallback {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.portrait-card {
+  min-height: 260px;
+  overflow: hidden;
+}
+
+.portrait-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.portrait-bg img {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 65%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.portrait-veil {
+  position: absolute;
+  inset: 0;
+  background: var(--tile);
+  opacity: 0.8;
+}
+@supports (background: color-mix(in srgb, red, blue)) {
+  .portrait-veil {
+    opacity: 1;
+    background: linear-gradient(
+      90deg,
+      var(--tile) 0%,
+      var(--tile) 28%,
+      color-mix(in srgb, var(--tile) 78%, transparent) 55%,
+      color-mix(in srgb, var(--tile) 30%, transparent) 100%
+    );
+  }
+}
+
+.portrait-fallback {
+  position: absolute;
+  right: 24px;
+  bottom: -12px;
+  font-size: 150px;
+  font-weight: 600;
+  line-height: 1;
+  opacity: 0.25;
+}
+
+.portrait-card .card-body {
+  position: relative;
+  z-index: 1;
+  max-width: 75%;
+  padding: 16px;
+  text-shadow: 1px 0 var(--tile), -1px 0 var(--tile), 0 1px var(--tile), 0 -1px var(--tile);
+}
+
+.character-name {
+  margin: 0 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid var(--ink);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+.retro-badge {
+  padding: 0 8px;
+  font-size: 15px;
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  text-shadow: none;
+}
+
+@media (max-width: 575.98px) {
+  .json-wrap { max-height: 60vh; }
+  .portrait-card .card-body { max-width: 100%; padding-top: 40px; }
+  .portrait-bg img { width: 100%; }
+  .portrait-veil { opacity: 1; }
+}
+@media (max-width: 575.98px) {
+  @supports (background: color-mix(in srgb, red, blue)) {
+    .portrait-veil { background: color-mix(in srgb, var(--tile) 80%, transparent); }
+  }
+}
+
+/* ---------- Hover and click to play ---------- */
+.portrait-card {
+  cursor: pointer;
+  user-select: none;
+  transition: translate 0.12s steps(2), box-shadow 0.12s steps(2);
+}
+.portrait-card:hover,
+.portrait-card:focus-visible {
+  translate: 0 -3px;
+  box-shadow: 6px 6px 0 var(--shadow);
+}
+.portrait-card:active {
+  translate: 0 0;
+  box-shadow: 2px 2px 0 var(--shadow);
+}
+.portrait-card:focus-visible { outline: 3px dotted var(--ink); outline-offset: 3px; }
+
+.portrait-veil { transition: opacity 0.15s steps(3); }
+.portrait-card:hover .portrait-veil,
+.portrait-card:focus-visible .portrait-veil { opacity: 0.82; }
+
+.portrait-card.is-playing {
+  box-shadow: 0 0 0 3px var(--cream), 0 0 0 6px var(--ink), 6px 6px 0 6px var(--shadow);
+}
+
+.play-chip {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  padding: 1px 8px;
+  color: var(--cream);
+  font-size: 14px;
+  background: var(--ink);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s steps(2);
+}
+.portrait-card:hover .play-chip,
+.portrait-card:focus-visible .play-chip,
+.portrait-card.is-playing .play-chip { opacity: 1; }
+.chip-playing { display: none; }
+.is-playing .chip-idle { display: none; }
+.is-playing .chip-playing { display: inline; animation: chip-blink 1s steps(2) infinite; }
+@keyframes chip-blink { 50% { opacity: 0.45; } }
+
+@media (hover: none) {
+  .play-chip { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portrait-card, .portrait-veil, .play-chip { transition: none; }
+  .is-playing .chip-playing { animation: none; }
+}

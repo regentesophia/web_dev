@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JSON</title>
+
+  <link rel="icon" type="image/png" href="../assets/page_icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link href="../assets/css/style.css" rel="stylesheet">
+  <link href="assets/css/json.css" rel="stylesheet">
+  <link href="../assets/css/desktop.css" rel="stylesheet">
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+  <main class="flex-grow-1 d-flex align-items-center justify-content-center px-3 py-4">
+    <section class="retro-window pop-in" aria-label="activity02_json" data-icon="json_icon.png">
+
+      <div class="retro-titlebar d-flex align-items-center gap-2">
+        <span class="name flex-grow-1">activity02_json</span>
+        <button type="button" class="retro-winbtn d-flex align-items-center justify-content-center" data-win="min" aria-label="Minimize">_</button>
+        <button type="button" class="retro-winbtn d-flex align-items-center justify-content-center" data-win="max" aria-label="Maximize">&#9633;</button>
+        <button type="button" class="retro-winbtn d-flex align-items-center justify-content-center" data-win="close" aria-label="Close">x</button>
+      </div>
+
+      <div class="retro-menubar d-flex gap-3" aria-hidden="true">
+        <span>File</span><span>Edit</span><span>View</span><span>Help</span>
+      </div>
+
+      <div class="retro-toolbar d-flex align-items-center gap-2">
+        <a class="btn btn-retro btn-sm" href="../index.html">&lt; Back</a>
+        <span>Address</span>
+        <span class="retro-path flex-grow-1 text-truncate">C:\portfolio\web_dev\activity02_json</span>
+      </div>
+
+      <div class="retro-body">
+        <div class="retro-content json-wrap">
+          <div class="container-fluid px-1">
+
+            <!-- Version logo above the gallery -->
+            <h1 class="visually-hidden">Song of the Welkin Moon characters</h1>
+            <div class="version-banner">
+              <img class="version-logo" src="assets/img/songofthewelkinmoon.png" alt="Genshin Impact: Song of the Welkin Moon">
+              <span class="version-fallback" hidden>Song of the Welkin Moon</span>
+            </div>
+
+            <div class="row" id="parent">
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="retro-statusbar d-flex justify-content-between">
+        <span id="count">0 object(s)</span>
+        <span>Genshin Impact &copy; HoYoverse</span>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="retro-taskbar d-flex align-items-center gap-2">
+    <button type="button" class="start" id="start-button" aria-haspopup="menu" aria-expanded="false">Start</button>
+    <button type="button" class="task" aria-pressed="true">activity02_json</button>
+    <span class="clock ms-auto" id="clock">--:--</span>
+  </footer>
+
+  <script src="assets/js/characters.js"></script>
+  <script src="assets/js/json.js"></script>
+  <script src="../assets/js/desktop.js"></script>
+</body>
+
+</html>

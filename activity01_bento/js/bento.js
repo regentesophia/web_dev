@@ -1,8 +1,5 @@
-// Student to-do board. Everything is saved in the visitor's browser (localStorage),
-// so it works on GitHub Pages with no server. Each visitor sees their own board.
-
 const $ = (id) => document.getElementById(id);
-const STORAGE_KEY = 'activity01_bento:v1'; // prefixed: all pages on one github.io site share storage
+const STORAGE_KEY = 'activity01_bento:v1';
 
 // ---------- helpers ----------
 const makeId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -299,6 +296,6 @@ const tick = () => {
 };
 
 renderAll();
-saveState(); // keeps the sample data after the first visit
+saveState();
 tick();
 setInterval(tick, 30000);

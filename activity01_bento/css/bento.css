@@ -1,15 +1,10 @@
-/* Bento tiles for activity01_bento.
-   Loaded after Bootstrap and ../assets/css/style.css, so these rules win. */
-
 .retro-window { width: min(1100px, 100%); }
 
-/* The grid sits in the same inset panel as the landing page's file area */
 .bento-wrap {
   min-height: 0;
   padding: 10px;
 }
 
-/* Bootstrap .card, restyled to match the retro windows */
 .card {
   --bs-card-border-width: 3px;
   --bs-card-border-color: var(--ink);
@@ -20,7 +15,6 @@
 
 .tile-tall { min-height: 256px; }
 
-/* Palette from the landing page */
 .card.tile-pink     { background-color: var(--pink); }
 .card.tile-lavender { background-color: var(--lavender); }
 .card.tile-mint     { background-color: var(--mint); }
@@ -118,7 +112,6 @@
 .btn-retro:disabled { opacity: 0.5; }
 
 /* ---------- Window pop-up animation ---------- */
-/* Stepped keyframes give a chunky, low-frame-rate "window opening" feel */
 @keyframes window-pop {
   0%   { transform: scale(0.2); opacity: 0; }
   60%  { transform: scale(1.04); opacity: 1; }
