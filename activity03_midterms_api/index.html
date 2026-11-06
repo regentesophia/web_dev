@@ -25,6 +25,9 @@
           <select id="typeFilter" class="form-select filter-select" data-bs-theme="dark" aria-label="Filter by type">
             <option value="">All types</option>
           </select>
+          <select id="rarityFilter" class="form-select filter-select" data-bs-theme="dark" aria-label="Filter by rarity">
+            <option value="">All rarities</option>
+          </select>
           <select id="pathFilter" class="form-select filter-select" data-bs-theme="dark" aria-label="Filter by path">
             <option value="">All paths</option>
           </select>
@@ -69,6 +72,7 @@
     var elCurrentPage = document.getElementById("currentPage");
     var elSearch = document.getElementById("searchInput");
     var elType = document.getElementById("typeFilter");
+    var elRarity = document.getElementById("rarityFilter");
     var elPath = document.getElementById("pathFilter");
 
     elSearch.value = urlParams.get('q') || '';
@@ -83,6 +87,7 @@
       var q = elSearch.value.trim();
       return (q ? "&q=" + encodeURIComponent(q) : "") +
              (elType.value ? "&el=" + encodeURIComponent(elType.value) : "") +
+             (elRarity.value ? "&ra=" + encodeURIComponent(elRarity.value) : "") +
              (elPath.value ? "&pa=" + encodeURIComponent(elPath.value) : "");
     }
 
@@ -91,6 +96,7 @@
       filtered = characters.filter(c =>
         (!q || String(c.id) === q || c.name.toLowerCase().includes(q)) &&
         (!elType.value || c.element === elType.value) &&
+        (!elRarity.value || String(c.rarity) === elRarity.value) &&
         (!elPath.value || c.path === elPath.value));
       lastPage = Math.max(1, Math.ceil(filtered.length / perPageLoad));
     }
@@ -104,7 +110,7 @@
       history.replaceState(null, "", "?page=" + page + state);
 
       if (!filtered.length) {
-        var hasFilter = elType.value || elPath.value;
+        var hasFilter = elType.value || elRarity.value || elPath.value;
         elParent.innerHTML = '<div class="col-12 text-center muted py-5" style="flex:1 0 100%" id="empty"></div>';
         document.getElementById("empty").textContent =
           'No characters match' + (q ? ' "' + q + '"' : '') + (hasFilter ? ' with these filters.' : '.');
@@ -145,11 +151,16 @@
 
     function refilter() { page = 1; applyFilter(); showPage(); }
     elType.addEventListener("change", refilter);
+    elRarity.addEventListener("change", refilter);
     elPath.addEventListener("change", refilter);
 
     loadCharacters().then(list => {
       characters = list;
       fillFilter(elType, list.map(c => c.element), elementName, urlParams.get('el'));
+      [...new Set(list.map(c => c.rarity))].sort((a, b) => b - a)
+        .forEach(r => elRarity.add(new Option(r + " ★", r)));
+      var wantedRarity = urlParams.get('ra');
+      if (wantedRarity && [...elRarity.options].some(o => o.value === wantedRarity)) elRarity.value = wantedRarity;
       fillFilter(elPath, list.map(c => c.path), pathName, urlParams.get('pa'));
       applyFilter();
       showPage();

@@ -47,7 +47,7 @@
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
     var page = parseInt(urlParams.get('page')) || 1;
-    var listUrl = "index.html?page=" + page + ["q", "el", "pa"]
+    var listUrl = "index.html?page=" + page + ["q", "el", "ra", "pa"]
       .filter(k => urlParams.get(k)).map(k => "&" + k + "=" + encodeURIComponent(urlParams.get(k))).join("");
 
     document.getElementById("titlebar").innerHTML = titlebarHTML(listUrl, "characters");
