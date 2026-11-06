@@ -42,7 +42,7 @@
     reopen.type = 'button';
     reopen.className = 'shortcut reopen-icon';
     reopen.hidden = true;
-    const iconFile = win.dataset.icon; // optional: file in assets/, e.g. data-icon="bento_icon.png"
+    const iconFile = win.dataset.icon; // optional: file in assets/img/, e.g. data-icon="bento_icon.png"
     reopen.innerHTML =
       (iconFile ? '<img alt="" width="56" height="56">' : '') +
       '<svg class="fallback" viewBox="0 0 16 16" aria-hidden="true">' +
@@ -60,7 +60,7 @@
         img.style.display = 'none';
         fallback.style.display = 'block';
       });
-      img.src = siteUrl('../' + iconFile);
+      img.src = siteUrl('../img/' + iconFile);
     }
     reopen.querySelector('.label').textContent =
       win.querySelector('.retro-titlebar .name').textContent.trim();
@@ -158,6 +158,7 @@
       { label: 'Web Dev Projects', href: siteUrl('../../index.html'), dot: 'lavender' },
       { label: 'activity01_bento', href: siteUrl('../../activity01_bento/index.html'), dot: 'mint' },
       { label: 'activity02_json', href: siteUrl('../../activity02_json/index.html'), dot: 'lavender' },
+      { label: 'activity03_midterms_api', href: siteUrl('../../activity03_midterms_api/index.html'), dot: 'pink' },
       'sep',
       { label: 'GitHub', href: 'https://github.com/regentesophia', dot: 'lilac', newTab: true },
       { label: 'Mail', href: 'mailto:regentesophia@gmail.com', dot: 'pink' },

@@ -10,6 +10,7 @@ A retro-computer-themed landing page for my web development projects, built with
 | --- | --- |
 | [`activity01_bento`](activity01_bento/) | A retro-themed to-do board with tasks, deadlines, a sticky note and a focus timer. Saves in your browser. |
 | [`activity02_json`](activity02_json/) | A JSON-powered gallery of Genshin Impact characters, shown as cards with portrait, element, weapon and intro. |
+| [`activity03_midterms_api`](activity03_midterms_api/) | A Honkai: Star Rail character browser ("Trailblaze Log") that loads data from the StarRailRes API, with search, element and path filters, paging, and detail pages with stats and skills. |
 
 ## Credits
 
@@ -30,6 +31,8 @@ More from the artist: <https://aconfuseddragon.itch.io>
 ### Game content
 
 Character names, portraits, intro lines and voice lines in `activity02_json` are from *Genshin Impact* and are © HoYoverse. They are used here for a class activity. This project is not affiliated with or endorsed by HoYoverse.
+
+Character data and images in `activity03_midterms_api` come from the [StarRailRes](https://github.com/Mar-7th/StarRailRes) API and are from *Honkai: Star Rail*, © HoYoverse. Used for a class activity; not affiliated with or endorsed by HoYoverse.
 
 ### Built with
 
