@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trailblaze Log</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="icon" type="image/png" href="assets/img/trailblaze_log_icon.png">
+  <link href="assets/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="desk">
+    <div id="titlebar"></div>
+    <main class="hsr-window">
+      <div class="content">
+        <div class="d-flex flex-wrap justify-content-center gap-2 mb-4" style="position:relative;z-index:1">
+          <div class="input-group" style="flex:1 1 280px;max-width:420px">
+            <input type="search" id="searchInput" class="form-control" autocomplete="off"
+              placeholder="Search by name or ID" aria-label="Search by name or ID">
+            <button class="btn btn-search" id="searchBtn">Search</button>
+          </div>
+          <select id="typeFilter" class="form-select filter-select" data-bs-theme="dark" aria-label="Filter by type">
+            <option value="">All types</option>
+          </select>
+          <select id="pathFilter" class="form-select filter-select" data-bs-theme="dark" aria-label="Filter by path">
+            <option value="">All paths</option>
+          </select>
+        </div>
+        <div class="row g-3 row-cols-2 row-cols-sm-3 row-cols-lg-5" id="parent">
+          <div class="col-12 text-center muted py-5" style="flex:1 0 100%">
+            <div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="statusbar">
+        <div class="pager">
+          <button class="pg" onclick="prev()">◂ Prev</button>
+          <span id="currentPage">1</span>
+          <button class="pg" onclick="next()">Next ▸</button>
+        </div>
+        <div><a href="../index.html">web_dev</a><span class="sq"></span><a href="index.html">Main Menu</a><span class="sq"></span><span id="clock"></span></div>
+      </div>
+    </main>
+    <div id="footer"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+  <script src="assets/js/api.js"></script>
+  <script>
+    document.getElementById("titlebar").innerHTML = titlebarHTML();
+    document.getElementById("footer").innerHTML = FOOTER;
+    startClock();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    var page = parseInt(urlParams.get('page')) || 1;
+
+    var perPageLoad = 10;
+    var characters = [];
+    var filtered = [];
+    var lastPage = 1;
+
+    var elParent = document.getElementById("parent");
+    var elCurrentPage = document.getElementById("currentPage");
+    var elSearch = document.getElementById("searchInput");
+    var elType = document.getElementById("typeFilter");
+    var elPath = document.getElementById("pathFilter");
+
+    elSearch.value = urlParams.get('q') || '';
+
+    function fillFilter(sel, values, label, wanted) {
+      [...new Set(values)].sort((a, b) => label(a).localeCompare(label(b)))
+        .forEach(v => sel.add(new Option(label(v), v)));
+      if (wanted && [...sel.options].some(o => o.value === wanted)) sel.value = wanted;
+    }
+
+    function stateParams() {
+      var q = elSearch.value.trim();
+      return (q ? "&q=" + encodeURIComponent(q) : "") +
+             (elType.value ? "&el=" + encodeURIComponent(elType.value) : "") +
+             (elPath.value ? "&pa=" + encodeURIComponent(elPath.value) : "");
+    }
+
+    function applyFilter() {
+      var q = elSearch.value.trim().toLowerCase();
+      filtered = characters.filter(c =>
+        (!q || String(c.id) === q || c.name.toLowerCase().includes(q)) &&
+        (!elType.value || c.element === elType.value) &&
+        (!elPath.value || c.path === elPath.value));
+      lastPage = Math.max(1, Math.ceil(filtered.length / perPageLoad));
+    }
+
+    function showPage() {
+      if (page > lastPage) page = lastPage;
+      if (page < 1) page = 1;
+      var q = elSearch.value.trim();
+      var state = stateParams();
+      elCurrentPage.textContent = filtered.length ? page + " / " + lastPage : "0 results";
+      history.replaceState(null, "", "?page=" + page + state);
+
+      if (!filtered.length) {
+        var hasFilter = elType.value || elPath.value;
+        elParent.innerHTML = '<div class="col-12 text-center muted py-5" style="flex:1 0 100%" id="empty"></div>';
+        document.getElementById("empty").textContent =
+          'No characters match' + (q ? ' "' + q + '"' : '') + (hasFilter ? ' with these filters.' : '.');
+        return;
+      }
+
+      var start = perPageLoad * (page - 1);
+      elParent.innerHTML = filtered.slice(start, start + perPageLoad).map(c => `
+        <div class="col">
+          <a class="card app-card" style="--c: ${colorOf(c)}" href="view.html?id=${c.id}&page=${page}${state}">
+            <div class="tile"><img loading="lazy" alt="" src="${BASE + c.icon}"></div>
+            <div class="name">${c.name}</div>
+            <div class="stars">${'★'.repeat(c.rarity)}</div>
+            <div class="chips">
+              <span class="chip">${elementName(c.element)}</span>
+              <span class="chip path">${pathName(c.path)}</span>
+            </div>
+          </a>
+        </div>`).join("");
+    }
+
+    function prev() { page -= 1; if (page < 1) page = lastPage; showPage(); }
+    function next() { page += 1; if (page > lastPage) page = 1; showPage(); }
+
+    const search = async () => {
+      page = 1;
+      elParent.innerHTML = '<div class="col-12 text-center muted py-5" style="flex:1 0 100%"><div class="spinner-border" role="status"><span class="visually-hidden">Searching...</span></div></div>';
+      try {
+        characters = await loadCharacters(true);
+        applyFilter();
+        showPage();
+      } catch (err) {
+        elParent.innerHTML = '<div class="col-12 text-center text-danger py-5" style="flex:1 0 100%">Search failed. Check your connection and try again.</div>';
+      }
+    };
+    document.getElementById("searchBtn").addEventListener("click", search);
+    elSearch.addEventListener("keydown", e => { if (e.key === "Enter") search(); });
+
+    function refilter() { page = 1; applyFilter(); showPage(); }
+    elType.addEventListener("change", refilter);
+    elPath.addEventListener("change", refilter);
+
+    loadCharacters().then(list => {
+      characters = list;
+      fillFilter(elType, list.map(c => c.element), elementName, urlParams.get('el'));
+      fillFilter(elPath, list.map(c => c.path), pathName, urlParams.get('pa'));
+      applyFilter();
+      showPage();
+    }).catch(() => {
+      elParent.innerHTML = '<div class="col-12 text-center text-danger py-5" style="flex:1 0 100%">Couldn\'t load character data. Reload the page to try again.</div>';
+    });
+  </script>
+</body>
+
+</html>
