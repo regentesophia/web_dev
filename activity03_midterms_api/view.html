@@ -16,8 +16,13 @@
     <div id="titlebar"></div>
     <main class="hsr-window">
       <div class="content">
-        <div class="mb-3" style="position:relative;z-index:1">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3" style="position:relative;z-index:1">
           <a href="index.html" id="backlink" class="btn btn-sm btn-back">◂ Back to list</a>
+          <div id="stepper" class="d-flex align-items-center gap-2" hidden>
+            <a id="prevLink" class="btn btn-sm btn-back" href="#" aria-label="Previous character">◂ Prev</a>
+            <span id="stepCount" class="small" style="min-width:64px;text-align:center"></span>
+            <a id="nextLink" class="btn btn-sm btn-back" href="#" aria-label="Next character">Next ▸</a>
+          </div>
         </div>
         <div class="row g-4" style="position:relative;z-index:1">
           <div class="col-lg-5 profile-col">
@@ -70,6 +75,34 @@
     window.addEventListener("resize", fitSticky);
     window.addEventListener("load", fitSticky);
 
+    // Prev / Next walk through the same list the person came from (same search and filters), wrapping around.
+    var perPage = 10;
+    function setupStepper(list, c) {
+      var q = (urlParams.get('q') || '').trim().toLowerCase(), el = urlParams.get('el'), ra = urlParams.get('ra'), pa = urlParams.get('pa');
+      var seq = list.filter(x =>
+        (!q || String(x.id) === q || x.name.toLowerCase().includes(q)) &&
+        (!el || x.element === el) && (!ra || String(x.rarity) === ra) && (!pa || x.path === pa));
+      var state = ["q", "el", "ra", "pa"].filter(k => urlParams.get(k)).map(k => "&" + k + "=" + encodeURIComponent(urlParams.get(k))).join("");
+      var i = seq.findIndex(x => x.id === c.id);
+      if (i < 0) { seq = list; state = ""; i = seq.findIndex(x => x.id === c.id); }
+      if (i < 0 || seq.length < 2) return;
+      function hrefFor(j) {
+        var idx = (j + seq.length) % seq.length;
+        return "view.html?id=" + seq[idx].id + "&page=" + (Math.floor(idx / perPage) + 1) + state;
+      }
+      var prev = hrefFor(i - 1), next = hrefFor(i + 1);
+      document.getElementById("prevLink").href = prev;
+      document.getElementById("nextLink").href = next;
+      document.getElementById("stepCount").textContent = (i + 1) + " / " + seq.length;
+      document.getElementById("stepper").hidden = false;
+      document.addEventListener("keydown", function (e) {
+        if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+        if (/^(INPUT|SELECT|TEXTAREA)$/.test((e.target.tagName || ""))) return;
+        if (e.key === "ArrowLeft") location.href = prev;
+        else if (e.key === "ArrowRight") location.href = next;
+      });
+    }
+
     function setAscension(n) {
       document.getElementById("statsBox").innerHTML = statsInnerHTML(curPromo, curChar, n);
     }
@@ -91,6 +124,7 @@
           elDetail.innerHTML = detailHTML(c, promos[c.id], true);
           fitSticky();
           curChar = c; curPromo = promos[c.id]; allSkills = skillData; renderSkills();
+          setupStepper(list, c);
         } else {
           elDetail.textContent = "Character not found.";
           elSkills.hidden = true;
