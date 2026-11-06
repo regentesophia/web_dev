@@ -55,15 +55,38 @@ function fillSkillText(sk, level) {
   return (sk.simple_desc || text).replace(/#\d+\[(i|f\d)\]%?/g, '?');
 }
 
-function skillsHTML(c, skills, level) {
-  const list = (c.skills || []).map(id => skills?.[id]).filter(Boolean);
+// Reworked characters list their skills twice. The second set has the same ids with a leading "1"
+// (e.g. 100401 -> 1100401) and the same name and type, so those are treated as the v2 version.
+function splitSkillVersions(c, skills) {
+  const ids = c.skills || [];
+  const v1 = [], v2 = [];
+  ids.forEach(id => {
+    const sk = skills?.[id];
+    if (!sk) return;
+    const base = skills?.[id.slice(1)];
+    const isV2 = id[0] === '1' && ids.includes(id.slice(1)) && base
+      && base.name === sk.name && base.type_text === sk.type_text;
+    (isV2 ? v2 : v1).push(sk);
+  });
+  return {v1, v2};
+}
+
+function skillsHTML(c, skills, level, version = 1) {
+  const {v1, v2} = splitSkillVersions(c, skills);
+  const hasV2 = v2.length > 0;
+  const list = hasV2 && version === 2 ? v2 : v1;
   if (!list.length) return '<div>Skill data isn\'t available right now.</div>';
   const options = Array.from({length: 15}, (_, i) => i + 1)
     .map(n => `<option value="${n}" ${n === level ? 'selected' : ''}>Lv. ${n}</option>`).join('');
+  const versionButtons = !hasV2 ? '' : `<div class="asc m-0" role="group" aria-label="Skill version">${
+    [1, 2].map(v => `<button class="${v === version ? 'on' : ''}" aria-pressed="${v === version}" onclick="setSkillVersion(${v})">v${v}</button>`).join('')}</div>`;
   return `
     <div class="d-flex justify-content-between align-items-center">
       <div class="h4 mb-0">Skills</div>
-      <select class="form-select form-select-sm lvl-select" data-bs-theme="dark" aria-label="Skill level" onchange="setSkillLevel(this.value)">${options}</select>
+      <div class="d-flex align-items-center gap-2">
+        ${versionButtons}
+        <select class="form-select form-select-sm lvl-select" data-bs-theme="dark" aria-label="Skill level" onchange="setSkillLevel(this.value)">${options}</select>
+      </div>
     </div>
     <div>${list.map(sk => {
       const lv = sk.params?.length > 1 ? Math.min(level, sk.params.length) : null;
@@ -125,11 +148,13 @@ function detailHTML(c, promo, splash, asc = 6) {
     </div>`;
 }
 
-function titlebarHTML(closeHref) {
+function titlebarHTML(closeHref, active = 'characters') {
+  const tab = (key, href, label) => `<a href="${href}" class="${active === key ? 'on' : ''}"${active === key ? ' aria-current="page"' : ''}>${label}</a>`;
   return `
     <div class="titlebar">
       <img class="ico" src="${BASE}icon/sign/AvatarIcon.png" alt="">
       <div><small>Honkai: Star Rail</small><b>Trailblaze Log</b></div>
+      <nav class="tabs" aria-label="Sections">${tab('characters', 'index.html', 'Characters')}${tab('lightcones', 'lightcones.html', 'Light Cones')}</nav>
       <a class="x" href="${closeHref || 'index.html'}" aria-label="Close">
         <svg width="26" height="26" viewBox="0 0 26 26" stroke="currentColor" stroke-width="2" fill="none"><path d="M3 3l20 20M23 3L3 23"/></svg>
       </a>
@@ -143,6 +168,109 @@ function startClock() {
   const tick = () => { el.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', hour12: false}); };
   tick();
   setInterval(tick, 30000);
+}
+
+// ---------- Light cones ----------
+const LC_COLORS = {5: '#f2c46d', 4: '#b48cf5', 3: '#6fa8ff'};
+function lcColor(l) { return LC_COLORS[l.rarity] || '#d0d0d0'; }
+
+async function loadLightCones(fresh) {
+  const response = await fetch(BASE + "index_min/" + LANG + "/light_cones.json", fresh ? {cache: 'no-cache'} : undefined);
+  if (!response.ok) throw new Error('HTTP ' + response.status);
+  const data = await response.json();
+  return Object.values(data).sort((a, b) => b.rarity - a.rarity || a.name.localeCompare(b.name));
+}
+
+async function loadLightConePromotions() {
+  const response = await fetch(BASE + "index_min/" + LANG + "/light_cone_promotions.json");
+  if (!response.ok) throw new Error('HTTP ' + response.status);
+  return response.json();
+}
+
+async function loadLightConeRanks() {
+  const response = await fetch(BASE + "index_min/" + LANG + "/light_cone_ranks.json");
+  if (!response.ok) throw new Error('HTTP ' + response.status);
+  return response.json();
+}
+
+const LC_PROPS = {
+  AttackAddedRatio: ['ATK', true], HPAddedRatio: ['HP', true], DefenceAddedRatio: ['DEF', true],
+  CriticalChanceBase: ['CRIT Rate', true], CriticalDamageBase: ['CRIT DMG', true],
+  BreakDamageAddedRatioBase: ['Break Effect', true], StatusProbabilityBase: ['Effect Hit Rate', true],
+  StatusResistanceBase: ['Effect RES', true], SpeedAddedRatio: ['SPD', true], BaseSpeed: ['SPD', false],
+  SPRatioBase: ['Energy Regen Rate', true], AllDamageTypeAddedRatio: ['All-Type DMG', true],
+  HealRatioBase: ['Outgoing Healing', true], HealTakenRatio: ['Incoming Healing', true],
+  ElationDamageAddedRatioBase: ['Elation DMG', true],
+};
+function propText(p) {
+  const [label, pct] = LC_PROPS[p.type] || [p.type, false];
+  return `${label} +${pct ? (Math.round(p.value * 1000) / 10) + '%' : Math.round(p.value * 10) / 10}`;
+}
+
+// Light cone passives change with superimposition (S1-S5), using the same #1[i]% placeholders as skills.
+function lcPassiveHTML(l, rank, sup) {
+  if (!rank) return '<div>Passive data isn\'t available right now.</div>';
+  const text = fillSkillText({desc: rank.desc.replace('{NICKNAME}', 'Trailblazer'), params: rank.params}, sup);
+  const props = (rank.properties?.[sup - 1] || []).map(p => `<span class="chip">${propText(p)}</span>`).join('');
+  const buttons = `<div class="asc m-0" role="group" aria-label="Superimposition">${
+    rank.params.map((_, i) => `<button class="${i + 1 === sup ? 'on' : ''}" aria-pressed="${i + 1 === sup}" onclick="setSuperimposition(${i + 1})">S${i + 1}</button>`).join('')}</div>`;
+  return `
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="h4 mb-0">Light Cone Passive</div>
+      ${buttons}
+    </div>
+    <div class="skill" style="--c: ${lcColor(l)}">
+      <div>
+        <div class="sk-name">${rank.skill} <span class="sk-lv">Superimposition ${sup}</span></div>
+        <div class="sk-desc">${text}</div>
+        ${props ? `<div class="chips mt-2" style="--c: ${lcColor(l)};justify-content:flex-start">${props}</div>` : ''}
+      </div>
+    </div>`;
+}
+
+function lcStatsInnerHTML(promo, asc) {
+  const ph = promo?.values?.[asc];
+  if (!ph) return '';
+  const lvl = 20 + 10 * asc;
+  const at = s => Math.floor(ph[s].base + ph[s].step * (lvl - 1));
+  const rows = [['HP', at('hp')], ['ATK', at('atk')], ['DEF', at('def')]];
+  const buttons = `<div class="asc" role="group" aria-label="Ascension">${
+    promo.values.map((_, i) => `<button class="${i === asc ? 'on' : ''}" aria-pressed="${i === asc}" onclick="setAscension(${i})">A${i}</button>`).join('')}</div>`;
+  return `
+    <div class="small mt-1">Ascension ${asc} · Lv. ${lvl}</div>
+    ${buttons}
+    <div class="stats">${rows.map(([k, v]) => `<div><span>${k}</span><span>${v}</span></div>`).join('')}</div>`;
+}
+
+function lcDetailHTML(l, promo, asc = 6) {
+  const name = l.name.replace('{NICKNAME}', 'Trailblazer');
+  return `
+    <div class="detail">
+      <div class="tilt-zone lc-hero" data-tilt="9">
+        <div class="lc-hero-card tilt-inner" style="--c: ${lcColor(l)}">
+          <img src="${BASE + l.portrait}" alt="${name} art" decoding="async" onerror="this.onerror=null;this.src='${BASE + l.preview}'">
+          <span class="glare"></span>
+        </div>
+      </div>
+      <div class="h3 mt-4 display-6">${name}</div>
+      <div class="stars mb-2" aria-label="${l.rarity} stars">${'★'.repeat(l.rarity)}</div>
+      <div class="chips" style="--c: ${lcColor(l)}">
+        <span class="chip id">#${l.id}</span>
+        <span class="chip path">${pathName(l.path)}</span>
+      </div>
+      <div class="mt-4">${lcStatsSectionHTML(promo, asc)}</div>
+    </div>`;
+}
+
+function lcStatsSectionHTML(promo, asc = 6) {
+  return `
+    <div class="h4 mb-0">Base Stats</div>
+    <div id="statsBox">${lcStatsInnerHTML(promo, asc)}</div>`;
+}
+
+function lcDescHTML(l) {
+  const desc = (l.desc || '').replace('{NICKNAME}', 'Trailblazer');
+  return desc ? `<div class="h4 mb-2">Description</div><div class="lc-flavor">${desc}</div>` : '';
 }
 
 const FOOTER = `<div class="foot">Data and images: <a href="https://github.com/Mar-7th/StarRailRes" target="_blank" rel="noopener noreferrer">StarRailRes</a> · Game assets belong to HoYoverse.</div>`;

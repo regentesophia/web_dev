@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Light Cone – Trailblaze Log</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="icon" type="image/png" href="assets/img/trailblaze_log_icon.png">
+  <link href="assets/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="desk">
+    <div id="titlebar"></div>
+    <main class="hsr-window">
+      <div class="content">
+        <div class="mb-3" style="position:relative;z-index:1">
+          <a href="lightcones.html" id="backlink" class="btn btn-sm btn-back">◂ Back to list</a>
+        </div>
+        <div class="row g-4" style="position:relative;z-index:1">
+          <div class="col-lg-5 profile-col">
+            <div class="card p-4 text-center" id="detail">
+              <div class="spinner-border mx-auto" role="status"><span class="visually-hidden">Loading...</span></div>
+            </div>
+          </div>
+          <div class="col-lg-7">
+            <div class="card p-4 detail" id="right">
+              <div id="passive"></div>
+              <div id="desc" class="mt-4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="statusbar">
+        <span>Light Cone</span>
+        <div><a href="../index.html">web_dev</a><span class="sq"></span><a href="index.html">Main Menu</a><span class="sq"></span><span id="clock"></span></div>
+      </div>
+    </main>
+    <div id="footer"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+  <script src="assets/js/bg.js"></script>
+  <script src="assets/js/tilt.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+    var page = parseInt(urlParams.get('page')) || 1;
+    var listUrl = "lightcones.html?page=" + page + ["q", "ra", "pa"]
+      .filter(k => urlParams.get(k)).map(k => "&" + k + "=" + encodeURIComponent(urlParams.get(k))).join("");
+
+    document.getElementById("titlebar").innerHTML = titlebarHTML(listUrl, "lightcones");
+    document.getElementById("footer").innerHTML = FOOTER;
+    document.getElementById("backlink").href = listUrl;
+    startClock();
+
+    var elDetail = document.getElementById("detail");
+    var elPassive = document.getElementById("passive");
+    var elDesc = document.getElementById("desc");
+    var elRight = document.getElementById("right");
+    var curCone = null, curPromo = null, curRank = null, superimposition = 1;
+
+    function fitSticky() {
+      var col = document.querySelector(".profile-col");
+      if (!col) return;
+      if (!window.matchMedia("(min-width: 992px)").matches) { col.style.top = ""; return; }
+      col.style.top = Math.min(16, window.innerHeight - col.offsetHeight - 16) + "px";
+    }
+    window.addEventListener("resize", fitSticky);
+    window.addEventListener("load", fitSticky);
+
+    function setAscension(n) {
+      document.getElementById("statsBox").innerHTML = lcStatsInnerHTML(curPromo, n);
+    }
+    function renderPassive() { elPassive.innerHTML = lcPassiveHTML(curCone, curRank, superimposition); }
+    function setSuperimposition(n) { superimposition = Number(n); renderPassive(); }
+
+    if (id == null) {
+      elDetail.textContent = "No light cone selected. Go back to the list and pick one.";
+      elRight.hidden = true;
+    } else {
+      Promise.all([loadLightCones(), loadLightConePromotions().catch(() => ({})), loadLightConeRanks().catch(() => ({}))]).then(([list, promos, ranks]) => {
+        var l = list.find(x => String(x.id) === id);
+        if (l) {
+          document.title = l.name + " – Trailblaze Log";
+          curCone = l; curPromo = promos[l.id]; curRank = ranks[l.id];
+          elDetail.innerHTML = lcDetailHTML(l, curPromo);
+          fitSticky();
+          renderPassive();
+          elDesc.innerHTML = lcDescHTML(l);
+        } else {
+          elDetail.textContent = "Light cone not found.";
+          elRight.hidden = true;
+        }
+      }).catch(() => {
+        elDetail.textContent = "Couldn't load light cone data. Reload the page to try again.";
+      });
+    }
+  </script>
+</body>
+
+</html>

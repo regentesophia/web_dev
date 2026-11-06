@@ -41,6 +41,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
+  <script src="assets/js/bg.js"></script>
   <script src="assets/js/api.js"></script>
   <script>
     const urlParams = new URLSearchParams(window.location.search);
@@ -49,14 +50,14 @@
     var listUrl = "index.html?page=" + page + ["q", "el", "pa"]
       .filter(k => urlParams.get(k)).map(k => "&" + k + "=" + encodeURIComponent(urlParams.get(k))).join("");
 
-    document.getElementById("titlebar").innerHTML = titlebarHTML(listUrl);
+    document.getElementById("titlebar").innerHTML = titlebarHTML(listUrl, "characters");
     document.getElementById("footer").innerHTML = FOOTER;
     document.getElementById("backlink").href = listUrl;
     startClock();
 
     var elDetail = document.getElementById("detail");
     var elSkills = document.getElementById("skills");
-    var curChar = null, curPromo = null, allSkills = {}, skillLevel = 10;
+    var curChar = null, curPromo = null, allSkills = {}, skillLevel = 10, skillVersion = 1;
 
     // Keeps the profile sticky without a scrollbar: if the card is taller than the window,
     // let it slide up until its bottom edge is on screen, then stick.
@@ -73,7 +74,10 @@
       document.getElementById("statsBox").innerHTML = statsInnerHTML(curPromo, curChar, n);
     }
 
-    function renderSkills() { elSkills.innerHTML = skillsHTML(curChar, allSkills, skillLevel); }
+    function renderSkills() {
+      elSkills.innerHTML = skillsHTML(curChar, allSkills, skillLevel, skillVersion);
+    }
+    function setSkillVersion(n) { skillVersion = Number(n); renderSkills(); }
     function setSkillLevel(n) { skillLevel = Number(n); renderSkills(); }
 
     if (id == null) {
