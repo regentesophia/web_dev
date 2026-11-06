@@ -10,7 +10,7 @@ A retro-computer-themed landing page for my web development projects, built with
 | --- | --- |
 | [`activity01_bento`](activity01_bento/) | A retro-themed to-do board with tasks, deadlines, a sticky note and a focus timer. Saves in your browser. |
 | [`activity02_json`](activity02_json/) | A JSON-powered gallery of Genshin Impact characters, shown as cards with portrait, element, weapon and intro. |
-| [`activity03_midterms_api`](activity03_midterms_api/) | A Honkai: Star Rail character and light cone browser ("Trailblaze Log") that loads data from the StarRailRes API, with search, filters, paging, detail pages with stats, skills (v1/v2 for reworked characters) and light cone passives, an animated star background, and tilting light cone cards. |
+| [`activity03_midterms_api`](activity03_midterms_api/) | A Honkai: Star Rail character and light cone browser powered by the StarRailRes API, with search, filters, and detail pages with stats, skills and passives. |
 
 ## Credits
 
